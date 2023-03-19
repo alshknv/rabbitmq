@@ -9,18 +9,17 @@ public class NcBenchmark : BaseBenchmark
     private const string QueueName = "SampleMessage";
     private const string ExchangeName = "ISampleMessage";
     private readonly INcConnection _connection;
-    private string consumerTag = default!;
-    public NcBenchmark(INcConnection connection)
+    public NcBenchmark(INcConnection connection, ILogger<NcBenchmark> logger) : base(logger)
     {
         _connection = connection;
     }
 
-    public override void Close()
+    protected override void Close()
     {
         _connection.Close();
     }
 
-    public override void PreInit()
+    protected override void PreInit()
     {
         var channel = _connection.GetChannel();
         channel.QueueDeclare(QueueName, true, false, true, null);
@@ -38,10 +37,10 @@ public class NcBenchmark : BaseBenchmark
                 channel.BasicAck(ea.DeliveryTag, false);
             });
         };
-        consumerTag = channel.BasicConsume(QueueName, false, consumer);
+        channel.BasicConsume(QueueName, false, consumer);
     }
 
-    public async override Task Publish(ISampleMessage message)
+    protected async override Task Publish(ISampleMessage message)
     {
         var channel = _connection.GetChannel();
         await Task.Run(() => channel.BasicPublish(ExchangeName, "", null, System.Text.Encoding.UTF8.GetBytes(SerializeObject(message))));

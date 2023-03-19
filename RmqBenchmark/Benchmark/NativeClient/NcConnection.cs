@@ -10,7 +10,7 @@ public interface INcConnection
 
 public class NcConnection : INcConnection
 {
-    private ConnectionFactory factory = new();
+    private readonly ConnectionFactory factory = new();
     private IConnection? connection;
     private IModel? channel;
     public NcConnection(BusConfig busConfig)
@@ -20,14 +20,8 @@ public class NcConnection : INcConnection
 
     public IModel GetChannel()
     {
-        if (connection == null)
-        {
-            connection = factory.CreateConnection();
-        }
-        if (channel == null)
-        {
-            channel = connection.CreateModel();
-        }
+        connection ??= factory.CreateConnection();
+        channel ??= connection.CreateModel();
         return channel;
     }
 

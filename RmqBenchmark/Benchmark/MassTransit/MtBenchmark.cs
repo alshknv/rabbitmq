@@ -6,20 +6,20 @@ namespace RmqBenchmark.MassTransit
     {
         private readonly IBusControl _bus;
 
-        public MtBenchmark(IBusControl publishEndpoint)
+        public MtBenchmark(IBusControl publishEndpoint, ILogger<MtBenchmark> logger) : base(logger)
         {
             _bus = publishEndpoint;
         }
 
-        public override void PreInit()
+        protected override void PreInit()
         {
         }
 
-        public override void Close()
+        protected override void Close()
         {
         }
 
-        public async override Task Publish(ISampleMessage message)
+        protected async override Task Publish(ISampleMessage message)
         {
             await _bus.Publish(message);
         }
