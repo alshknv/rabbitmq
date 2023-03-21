@@ -19,9 +19,13 @@ namespace RmqBenchmark.MassTransit
         {
         }
 
-        protected async override Task Publish(ISampleMessage message)
+        protected override Task Publish(ISampleMessage message)
         {
-            await _bus.Publish(message);
+            return _bus.Publish(message);
+        }
+
+        protected override void BeginConsume()
+        {
         }
     }
 }

@@ -1,6 +1,7 @@
 using RmqBenchmark;
 using RmqBenchmark.MassTransit;
 using RmqBenchmark.NativeClient;
+using RmqBenchmark.Kafka;
 using MassTransit;
 
 var config = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build();
@@ -27,6 +28,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<MtBenchmark>();
         services.AddSingleton<INcConnection, NcConnection>();
         services.AddSingleton<NcBenchmark>();
+        services.AddSingleton<IKfConnection, KfConnection>();
+        services.AddSingleton<KfBenchmark>();
         services.AddHostedService<Worker>();
     })
     .Build();
